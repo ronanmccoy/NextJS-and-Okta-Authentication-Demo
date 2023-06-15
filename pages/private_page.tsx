@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { useOktaAuth } from "@okta/okta-react";
 
-
 import styles from '../styles/Home.module.css'
 
 export default function PrivatePage() {
@@ -12,8 +11,6 @@ export default function PrivatePage() {
   const [userInfo, setUserInfo] = useState<any | null>(null);
 
   useEffect(() => {
-    console.log("below should be auth status");
-    console.info(authState);
     if(authState) {
       if(!authState.isAuthenticated) {
         // When user isn't authenticated, forget any user info
@@ -30,15 +27,15 @@ export default function PrivatePage() {
     }
   }, [authState, oktaAuth])
 
-  let authStatus = ''
-  let secretInfo = '';
+  let authStatus = 'Not logged in'
 
-  if(!userInfo) {
-    authStatus = 'Not logged in'
-    secretInfo = ''
-  } else {
+  if(!authState || !authState.isAuthenticated) {
+    router.replace('/unauthorized')
+  }
+  
+  if(authState && authState.isAuthenticated) {
+    console.log(userInfo);
     authStatus = 'Logged in'
-    secretInfo = 'The Hapsburg napkin fold is a way of folding the napkin into a shape resembling a bishop\'s mitre. And the knowledge of how to do it has been a closely guarded secret for generations. Until now...'
   }
 
   return (
@@ -47,8 +44,13 @@ export default function PrivatePage() {
 
       <p className={styles.code}>Authentication status: {authStatus}</p>
 
-      <p>This is the private page that requires authentication. If you are logged in then there should be some secret information in the next paragraph, otherwise there is no next paragraph.</p>
-      <p>{secretInfo}</p>
+      <p>
+        This is a secure page that requires authentication. You can only view this page when you are logged in.
+      </p>
+
+      <blockquote className="blockquote">
+        The Hapsburg napkin fold is a way of folding the napkin into a shape resembling a bishop's mitre. And the knowledge of how to do it has been a closely guarded secret for generations. Until now...
+      </blockquote>
     </div>
   )
 }

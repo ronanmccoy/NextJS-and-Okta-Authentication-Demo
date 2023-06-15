@@ -1,6 +1,6 @@
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { useOktaAuth } from '@okta/okta-react'
+import { useOktaAuth, LoginCallback } from '@okta/okta-react'
 
 const Nav = () => {
   const { oktaAuth, authState } = useOktaAuth();
@@ -8,22 +8,18 @@ const Nav = () => {
   const [redirectRoute, setRedirectRoute] = useState<string>('/');
 
   const oktaLogin = () => {
-    console.log("oktaLogin called (with redirect route " + redirectRoute + ")")
+    setRedirectRoute("/");
     oktaAuth.signInWithRedirect({ originalUri: redirectRoute})
   }
 
   let signInComponent = null;
 
-  if(authState && authState.isAuthenticated) {
-    signInComponent = <Link onClick={() => oktaAuth.signOut()} className="btn btn-outline-primary" href={''}>Sign Out</Link>
-  } else {
-    signInComponent = <Link onClick={oktaLogin} className="btn btn-outline-primary" href={''}>Sign In</Link>
-  }
+  signInComponent = (authState && authState.isAuthenticated) ? <Link onClick={() => oktaAuth.signOut()} className="btn btn-outline-primary" href={''}>Sign Out</Link> : <Link onClick={oktaLogin} className="btn btn-outline-primary" href={''}>Sign In</Link>
   
   return (
     <nav className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid">
-        <Link className="navbar-brand" href="/">Navbar</Link>
+        <Link className="navbar-brand" href="/">NextJS-Okta</Link>
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
         </button>
@@ -36,7 +32,7 @@ const Nav = () => {
               <Link className="nav-link" href="/public_page">Public Page</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" href="/private_page">Private Page</Link>
+              <Link className="nav-link" href="/private_page">Secure Page</Link>
             </li>
             <li className="nav-item">
               {signInComponent}
