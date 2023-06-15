@@ -1,7 +1,7 @@
 # NextJS & Okta Example
 
 ## Getting Started
-This is a basic example of using Okta to authenticate users for a NextJS app. This does not implement a custom form, but relies on the standard log-in page to allow a user to log in.
+This is a basic example of using Okta to authenticate users for a NextJS app. This does not implement a custom form, but relies on the standard Okta log-in page to allow a user to log in.
 
 ## Dependencies
 - a valid Okta account with an OpenID Connect app configured
